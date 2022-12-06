@@ -1,4 +1,4 @@
-# chartink_screener_scrap
+# chartink_screener_scrapper
 
 ## require chrome browser installed 
 ## pip install requirements

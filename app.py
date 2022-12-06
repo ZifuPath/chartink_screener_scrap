@@ -62,7 +62,7 @@ def main(url):
         return 'No stocks found'
 
 if __name__ == '__main__':
-    url = 'https://chartink.com/screener/firoz-investment'
+    url = ''
     res = main(url)
     if isinstance(res, str):
         print(res)
