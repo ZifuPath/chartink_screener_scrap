@@ -10,6 +10,8 @@ from selenium.webdriver.chrome.options import Options
 def chrome_install(option=None, options=False):
     try:
         if options:
+            option.add_argument("--headless")
+            option.add_argument('ignore-certificate-errors')
             driver = webdriver.Chrome(executable_path='chromedriver.exe', options=option)
             driver.get("www.google.com")
             driver.close()
@@ -19,14 +21,16 @@ def chrome_install(option=None, options=False):
             driver.close()
     except:
         ca.install(cwd=True)
-        driver = webdriver.Chrome(executable_path='chromedriver.exe')
+        option.add_argument("--headless")
+        option.add_argument('ignore-certificate-errors')
+        driver = webdriver.Chrome(executable_path='chromedriver.exe',options=option)
         driver.close()
     return driver
 
 
 def get_stocks(url):
     chrome_options = Options()
-    # chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument('ignore-certificate-errors')
     driver = webdriver.Chrome(executable_path='chromedriver.exe', options=chrome_options)
     driver.get(url)
@@ -43,15 +47,24 @@ def get_stocks(url):
     except BaseException as err:
         print(err.args)
 
-if __name__ == '__main__':
+def main(url):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument('ignore-certificate-errors')
-    driver = chrome_install(options=True, option=chrome_options)
-    url = ''
+    chrome_install(options=True, option=chrome_options)
     st = get_stocks(url)
     if len(st)>0:
         df =pd.DataFrame(st,columns=['Sr.no','Name','Symbol','Links','%CH','Price','Vol'])
         feature = ['Name','Symbol','%CH','Price']
         df = df[feature]
-        print(df.head())
+        return df
+    else:
+        return 'No stocks found'
+
+if __name__ == '__main__':
+    url = 'https://chartink.com/screener/firoz-investment'
+    res = main(url)
+    if isinstance(res, str):
+        print(res)
+    else:
+        print(res.head())
